@@ -43,3 +43,21 @@ remmeber edit your PUBG-map-hack `CURLWrapper.hpp`:
 		}
 	}
 ```
+
+## changelog
+
+2017-11-4 04:04:44
+ * Dead body is a black dot right now.
+ * Add a Health pie chart, The player's health has a visual effect right now.
+
+*you need update your PUBG-map-hack `GameDataParser.hpp`.*
+ ```
+	if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end())
+	{
+		// ...
+
+		float hp = _Reader->readType<float>(curActor + 0x107C); // <---- here
+
+		w_data["players"].emplace_back(json::object({ { "t", actorTeam }, {"hp", hp}, { "x", actorLocation.X },{ "y", actorLocation.Y }/*,{ "z", actorLocation.Z }*/ })); // <---- and here
+	}
+ ```

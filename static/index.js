@@ -79,11 +79,18 @@ $(function () {
             var color = "";
             if (i == tracked_player) {
                 color = '#00BB00';
+            } else if (players[tracked_player].t == player.t) {
+                color = '#0033BB';
             } else {
-                color = players[0].t == player.t ? '#0033BB' : '#ff0000';
+                color = '#ff0000';
             }
-            drawDot(ctx, player.x, player.y, color);
-            drawText(ctx, player.x, player.y, i);
+            if (player.hp == 0) {
+                color = '#000000';
+                drawDot(ctx, player.x, player.y, color);
+            } else {
+                drawDotWithHp(ctx, player.x, player.y, player.hp, color);
+            }
+            drawText(ctx, player.x, player.y, i, 'white');
         }
     }
 
@@ -94,7 +101,7 @@ $(function () {
         var items = locations.items;
         for (var i = items.length - 1; i >= 0; i--) {
             var item = items[i];
-            drawText(ctx, item.x, item.y, item.n);
+            drawText(ctx, item.x, item.y, item.n, 'red');
         }
     }
 
@@ -105,7 +112,7 @@ $(function () {
         var vehicles = locations.vehicles;
         for (var i = vehicles.length - 1; i >= 0; i--) {
             var vehicle = vehicles[i];
-            drawText(ctx, vehicle.x, vehicle.y, vehicle.v);
+            drawText(ctx, vehicle.x, vehicle.y, vehicle.v, 'orange');
         }
     }
 
@@ -120,11 +127,34 @@ $(function () {
         ctx.fill();
     }
 
-    function drawText(ctx, x, y, content) {
+    function drawDotWithHp(ctx, x, y, hp, color) {
+        var centerX = game2pix(x);
+        var centerY = game2pix(y);
+
+        // 底色
+        drawDot(ctx, x, y, color);
+
+
+        var radius = 7 / scaledFactor;
+        var startAngle = 1.5 * Math.PI;
+        var endAngle = (((100 - hp) / 100) * 2 * Math.PI) + 1.5 * Math.PI;
+
+        // 扇形
+        ctx.fillStyle = 'gray';
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle, false);
+        ctx.closePath();
+        ctx.fill();
+        startAngle = endAngle;
+
+    }
+
+    function drawText(ctx, x, y, content, color) {
         var centerX = game2pix(x);
         var centerY = game2pix(y);
         ctx.font = '' + 8 / scaledFactor + 'pt Calibri';
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = color;
         ctx.textAlign = 'center';
         ctx.fillText(content, centerX, centerY + (3 / scaledFactor));
     }
