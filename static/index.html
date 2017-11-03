@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Document</title>
+</head>
+<style>
+      body {
+            padding: 0;
+            margin: 0;
+      }
+
+      .container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+      }
+
+      .map {
+            display: block;
+      }
+</style>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="/socket.io.js"></script>
+<script src="/hammer.min.js"></script>
+<script src="/index.js"></script>
+
+
+<body>
+      <div class="container">
+            <canvas id="myCanvas" class="map"></canvas>
+      </div>
+
+</body>
+<script>
+      function resizeCanvas() {
+            $('#myCanvas').attr("width", window.innerWidth).attr("height", window.innerHeight);
+      }
+      window.addEventListener('resize', resizeCanvas);
+      $(function () {
+            resizeCanvas();
+      })
+</script>
+
+</html>
