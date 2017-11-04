@@ -1,63 +1,79 @@
 # PUBG-mapper
 
-this map should working with https://github.com/jussihi/PUBG-map-hack
+This map should working with https://github.com/jussihi/PUBG-map-hack
 
+![](static/browser.png)
+
+![](static/mobile.png)
+
+## Feature
+
+* Display player location and health
+* Display item
+* Display Vehicle
+* Track current player location (change that with `/?id=PLAYERINDEX`)
+
+## Build instructions
+
+1. Install [Nodejs](https://nodejs.org.).
+2. To your Working directory and run `npm install` to install package.
+3. Run services `node index.js`.
+4. The Map will running at `localhost:7890`.
+
+## Configure **PUBG-map-hack**
+
+edit your PUBG-map-hack `CURLWrapper.hpp` file:
+
+1. Change `CURLOPT_URL` to `http://127.0.0.1:7890/`
+2. Change `CURLOPT_CUSTOMREQUEST` to `POST`
+3. Save and compile.
+
+exp:
 ```
-npm install
-node index.js
-```
-mapper will running at `localhost:7890`.
-
-you can change port at `index.js` `var port = 7890;`.
-
-
-remmeber edit your PUBG-map-hack `CURLWrapper.hpp`:
-
-```
-	int sendData(std::string& w_data)
+int sendData(std::string& w_data)
+{
+	try
 	{
-		try
-		{
-			struct curl_slist *headers = NULL;
+		struct curl_slist *headers = NULL;
 
-			headers = curl_slist_append(headers, "Content-Type: application/json");
+		headers = curl_slist_append(headers, "Content-Type: application/json");
 
-			curl_easy_setopt(m_curl, CURLOPT_VERBOSE, 0L);
-			curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
-			curl_easy_setopt(m_curl, CURLOPT_URL, "http://127.0.0.1:7890/");  // <---- here
-			curl_easy_setopt(m_curl, CURLOPT_CUSTOMREQUEST, "POST");          // <---- here
-			// curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 30L);
-			curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, write_data);
-			curl_easy_setopt(m_curl, CURLOPT_POSTFIELDS, w_data.data());
-			curl_easy_setopt(m_curl, CURLOPT_NOSIGNAL, 1);
+		curl_easy_setopt(m_curl, CURLOPT_VERBOSE, 0L);
+		curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
+		curl_easy_setopt(m_curl, CURLOPT_URL, "http://127.0.0.1:7890/");  // <---- here
+		curl_easy_setopt(m_curl, CURLOPT_CUSTOMREQUEST, "POST");          // <---- here
+		// curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 30L);
+		curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, write_data);
+		curl_easy_setopt(m_curl, CURLOPT_POSTFIELDS, w_data.data());
+		curl_easy_setopt(m_curl, CURLOPT_NOSIGNAL, 1);
 
-			curl_easy_perform(m_curl);
+		curl_easy_perform(m_curl);
 
-			curl_slist_free_all(headers);
-			curl_easy_reset(m_curl);
-		}
-		catch (std::exception& e)
-		{
-			std::cout << e.what() << std::endl;
-			return -1;
-		}
+		curl_slist_free_all(headers);
+		curl_easy_reset(m_curl);
 	}
+	catch (std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+		return -1;
+	}
+}
 ```
 
 ## changelog
 
-2017-11-4 04:04:44
+### 2017-11-4 04:04:44
  * Dead body is a black dot right now.
- * Add a Health pie chart, The player's health has a visual effect right now.
+ * Add a Health pie chart, The player's health has a visual effect.
 
-*you need update your PUBG-map-hack `GameDataParser.hpp`.*
+ **to enable this feature you need edit your PUBG-map-hack `GameDataParser.hpp`**:
  ```
-	if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end())
-	{
-		// ...
+if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end())
+{
+	// ...
 
-		float hp = _Reader->readType<float>(curActor + 0x107C); // <---- here
+	float hp = _Reader->readType<float>(curActor + 0x107C); // <---- here
 
-		w_data["players"].emplace_back(json::object({ { "t", actorTeam }, {"hp", hp}, { "x", actorLocation.X },{ "y", actorLocation.Y }/*,{ "z", actorLocation.Z }*/ })); // <---- and here
-	}
+	w_data["players"].emplace_back(json::object({ { "t", actorTeam }, {"hp", hp}, { "x", actorLocation.X },{ "y", actorLocation.Y }/*,{ "z", actorLocation.Z }*/ })); // <---- and here
+}
  ```
