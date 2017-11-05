@@ -100,6 +100,7 @@ $(function () {
         var items = locations.items;
         for (var i = items.length - 1; i >= 0; i--) {
             var item = items[i];
+            drawDot(ctx, item.x, item.y, 'red', 1);
             drawText(ctx, item.x, item.y, item.n, 'red');
         }
     }
@@ -115,13 +116,13 @@ $(function () {
         }
     }
 
-    function drawDot(ctx, x, y, color) {
+    function drawDot(ctx, x, y, color, width) {
         var centerX = game2pix(x);
         var centerY = game2pix(y);
         var radius = 7 / scaledFactor;
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-        ctx.lineWidth = 5;
+        ctx.lineWidth = width || 5;
         ctx.fillStyle = color;
         ctx.fill();
     }
