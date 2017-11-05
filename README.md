@@ -77,3 +77,6 @@ if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end()
     w_data["players"].emplace_back(json::object({ { "t", actorTeam }, {"hp", hp}, { "x", actorLocation.X },{ "y", actorLocation.Y }/*,{ "z", actorLocation.Z }*/ })); // <---- and here
 }
  ```
+
+### 2017-11-5 21:47:58
+* Add fullscreen support (ios safari ONLY).

@@ -1,9 +1,19 @@
 $(function () {
     function resizeCanvas() {
-        $('#myCanvas').attr("width", window.innerWidth).attr("height", window.innerHeight);
+        var height = window.innerHeight;
+        var is_safari = navigator.userAgent.indexOf("Safari") > -1;
+
+        if ((navigator.userAgent.match(/iPhone/i)) ||
+            (navigator.userAgent.match(/iPod/i))) {
+            if (is_safari) {
+                height += 80;
+            }
+        }
+        $('#myCanvas').attr("width", window.innerWidth).attr("height", height);
     }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
+
 })
 
 $(function () {
