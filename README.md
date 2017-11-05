@@ -4,11 +4,9 @@ This map should working with https://github.com/jussihi/PUBG-map-hack
 
 ![](pics/browser.png)
 
-![](pics/mobile.png)
-
 ## Feature
 
-* Display player location and health
+* Display player (location, health, facing direction)
 * Display item
 * Display Vehicle
 * Track current player location (change that with `/?id=PLAYERINDEX`)
@@ -66,8 +64,8 @@ int sendData(std::string& w_data)
  * Dead body is a black dot right now.
  * Add a Health pie chart, The player's health has a visual effect.
 
- **to enable this feature you need edit your PUBG-map-hack `GameDataParser.hpp`**:
- ```
+**to enable this feature you need edit your PUBG-map-hack `GameDataParser.hpp`**:
+```
 if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end())
 {
     // ...
@@ -80,3 +78,21 @@ if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end()
 
 ### 2017-11-5 21:47:58
 * Add fullscreen support (ios safari ONLY).
+
+### 2017-11-6 00:16:33
+* Add facing direction arrow.
+
+**to enable this feature you need edit your PUBG-map-hack `GameDataParser.hpp`**:
+```
+if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end())
+{
+    int64_t rootCmpPtr = _Reader->readType<int64_t>(curActor + 0x180);
+    int64_t playerState = _Reader->readType<int64_t>(curActor + 0x3C0);
+    Vector3 actorLocation = _Reader->readVec(rootCmpPtr + 0x1A0);
+    Vector3 relativeRotation = _Reader->readVec(rootCmpPtr + 0x01EC); // <---- here
+
+    // ...
+    
+    w_data["players"].emplace_back(json::object({ { "t", actorTeam }, {"hp", hp}, { "x", actorLocation.X },{ "y", actorLocation.Y }, {"r", relativeRotation.Y } })); // <---- and here
+}
+```

@@ -14,6 +14,10 @@ $(function () {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
+    // 禁止移动端弹性webview
+    document.ontouchmove = function (event) {
+        event.preventDefault();
+    }
 })
 
 $(function () {
@@ -27,7 +31,7 @@ $(function () {
     var locations = {};
     var mapImage = new Image;
     mapImage.src = "map.jpg"
-    var tracked_player = parseInt(getParameterByName('id') || 0);
+    var trackPlayerIndex = parseInt(getParameterByName('id') || 0);
     var separated = {};
     var viewPointOffset = {
         x: window.innerWidth / 2,
@@ -57,8 +61,8 @@ $(function () {
         ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
 
         // 视角追踪
-        if (locations.players && locations.players[tracked_player]) {
-            var player = locations.players[tracked_player];
+        if (locations.players && locations.players[trackPlayerIndex]) {
+            var player = locations.players[trackPlayerIndex];
             var centerX = game2pix(player.x);
             var centerY = game2pix(player.y);
 
@@ -86,9 +90,9 @@ $(function () {
         for (var i = players.length - 1; i >= 0; i--) {
             var player = players[i];
             var color = "";
-            if (i == tracked_player) {
+            if (i == trackPlayerIndex) {
                 color = '#00BB00';
-            } else if (players[tracked_player].t == player.t) {
+            } else if (players[trackPlayerIndex].t == player.t) {
                 color = '#0033BB';
             } else {
                 color = '#ff0000';
@@ -97,6 +101,7 @@ $(function () {
                 color = '#000000';
                 drawDot(ctx, player.x, player.y, color);
             } else {
+                drawLineWithAngle(ctx, player.x, player.y, 15 / scaledFactor, 6 / scaledFactor, player.r, color);
                 drawDotWithHp(ctx, player.x, player.y, player.hp, color);
             }
             drawText(ctx, player.x, player.y, i, 'white');
@@ -169,9 +174,79 @@ $(function () {
         ctx.fillText(content, centerX, centerY + (3 / scaledFactor));
     }
 
-    // 禁止移动端弹性webview
-    document.ontouchmove = function (event) {
-        event.preventDefault();
+    // from https://github.com/jerrytang67/helloworld
+    function drawLineWithAngle(ctx, x, y, length, width, angle, color) {
+        var centerX = game2pix(x);
+        var centerY = game2pix(y);
+        var anX = 5 * Math.cos(Math.PI * angle / 180.0);
+        var anY = 5 * Math.sin(Math.PI * angle / 180.0);
+
+        var x1 = centerX + anX;
+        var y1 = centerY + anY;
+
+        var circle1 = {
+            x: centerX,
+            y: centerY,
+            r: 5
+        };
+        var circle2 = {
+            x: x1,
+            y: y1,
+            r: 0
+        };
+
+        var arrow = {
+            h: width,
+            w: length
+        };
+
+        drawArrow(ctx, arrow, circle1, circle2, color);
+    }
+
+    //draw arrow -- uuaing
+    function drawArrow(canvasContext, arrow, ptArrow, endPt, color) {
+        var angleInDegrees = getAngleBetweenPoints(ptArrow, endPt);
+        var endPt = getPointOnCircle(endPt.r, ptArrow, endPt);
+        // first save the untranslated/unrotated context
+        canvasContext.save();
+
+        // move the rotation point to the center of the rect    
+        canvasContext.translate(endPt.x, endPt.y);
+        // rotate the rect
+        canvasContext.rotate(angleInDegrees * Math.PI / 180);
+        canvasContext.beginPath();
+        canvasContext.moveTo(0, 0);
+
+        canvasContext.lineTo(0, -arrow.h);
+        canvasContext.lineTo(arrow.w, 0);
+        canvasContext.lineTo(0, +arrow.h);
+        canvasContext.closePath();
+        canvasContext.fillStyle = color;
+        canvasContext.lineWidth = 0;
+        //canvasContext.stroke();
+        canvasContext.fill();
+
+        // restore the context to its untranslated/unrotated state
+        canvasContext.restore();
+    }
+
+    function getPointOnCircle(radius, originPt, endPt) {
+        var angleInDegrees = getAngleBetweenPoints(originPt, endPt);
+        // Convert from degrees to radians via multiplication by PI/180        
+        var x = radius * Math.cos(angleInDegrees * Math.PI / 180) + originPt.x;
+        var y = radius * Math.sin(angleInDegrees * Math.PI / 180) + originPt.y;
+        return {
+            x: x,
+            y: y
+        };
+    }
+
+    function getAngleBetweenPoints(originPt, endPt) {
+        var interPt = {
+            x: endPt.x - originPt.x,
+            y: endPt.y - originPt.y
+        };
+        return Math.atan2(interPt.y, interPt.x) * 180 / Math.PI;
     }
 
     var hammertime = new Hammer.Manager(canvas);
@@ -244,24 +319,6 @@ $(function () {
     // translates game coords to overlay coords
     function game2pix(p) {
         return p * (8130 / 813000)
-    }
-
-    function drawStrokedText(text, x, y, fillcolor) {
-        ctx.fillStyle = 'black';
-        ctx.fillText(text, x - 1 / scaledFactor, y);
-        ctx.fillText(text, x, y - 1 / scaledFactor);
-        ctx.fillText(text, x + 1 / scaledFactor, y);
-        ctx.fillText(text, x, y + 1 / scaledFactor);
-        ctx.fillStyle = fillcolor;
-        ctx.fillText(text, x, y);
-    }
-
-    function intersects(a, b) {
-        if (a.x > (b.x + b.w) || b.x > (a.x + a.w)) //beside
-            return false;
-        if ((a.y + a.h) < b.y || (b.y + b.h) < a.y) //above
-            return false;
-        return true;
     }
 
     // Adds ctx.getTransform() - returns an SVGMatrix
