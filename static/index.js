@@ -1,14 +1,22 @@
 $(function () {
+    function resizeCanvas() {
+        $('#myCanvas').attr("width", window.innerWidth).attr("height", window.innerHeight);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+})
+
+$(function () {
     // setup context and database connection
     var canvas = $('#myCanvas')[0];
     var ctx = canvas.getContext('2d');
+    trackTransforms(ctx);
     var factor = 1;
     var scaledFactor = 1;
     var socket = io();
     var locations = {};
     var mapImage = new Image;
     mapImage.src = "map.jpg"
-    var lastloc;
     var tracked_player = parseInt(getParameterByName('id') || 0);
     var separated = {};
     var viewPointOffset = {
@@ -22,12 +30,8 @@ $(function () {
             y: window.innerHeight / 2
         };
     });
+
     var drawing = false;
-
-
-
-    trackTransforms(ctx);
-
     socket.on('update', function (snapshot) {
         locations = snapshot;
         if (!drawing) {
@@ -41,11 +45,6 @@ $(function () {
         var p1 = ctx.transformedPoint(0, 0);
         var p2 = ctx.transformedPoint(canvas.width, canvas.height);
         ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
-
-        // ctx.rect(20, 20, 20, 20);
-        // ctx.fillStyle = "green";
-        // ctx.fill();
-        // return;
 
         // 视角追踪
         if (locations.players && locations.players[tracked_player]) {
@@ -252,47 +251,6 @@ $(function () {
         if ((a.y + a.h) < b.y || (b.y + b.h) < a.y) //above
             return false;
         return true;
-    }
-
-    function separate() {
-        var a, b; // to hold any two items that are overlapping
-        var dx, dy, dxa, dxb, dya, dyb; // holds delta values of the overlap
-
-        do {
-            var touching = false; // a boolean flag to keep track of touching items
-            for (var i = 0; i < separated.length; i++) {
-                a = separated[i];
-                for (var j = i + 1; j < separated.length; j++) { // for each pair of items
-                    b = separated[j];
-                    if (intersects(a, b)) {
-                        touching = true; //iterate again
-
-                        //calculate the minimum movement delta
-                        dx = Math.min((a.x + a.w) - b.x + 1, a.x - (b.x + b.w) - 1);
-                        dy = Math.min((a.y + a.h) - b.y + 1, a.y - (b.y + b.h) - 1);
-
-                        // only keep the smallest delta, multiply width as 
-                        // text is always longer than tall so it wont only stack vertical
-                        (Math.abs(dx) < (2.25 * Math.abs(dy))) ? dy = 0: dx = 0;
-
-                        // create a delta for each rectangle as half the whole delta.
-                        dxa = -dx / 2;
-                        dxb = dx + dxa;
-
-                        // same for y
-                        dya = -dy / 2;
-                        dyb = dy + dya;
-
-                        // shift both rectangles
-                        separated[i].x += dxa;
-                        separated[i].y += dya;
-
-                        separated[j].x += dxb;
-                        separated[j].y += dyb;
-                    }
-                }
-            }
-        } while (touching); // loop until no rectangles are touching
     }
 
     // Adds ctx.getTransform() - returns an SVGMatrix

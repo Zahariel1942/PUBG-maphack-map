@@ -2,9 +2,9 @@
 
 This map should working with https://github.com/jussihi/PUBG-map-hack
 
-![](static/browser.png)
+![](pics/browser.png)
 
-![](static/mobile.png)
+![](pics/mobile.png)
 
 ## Feature
 
