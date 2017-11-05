@@ -100,7 +100,7 @@ $(function () {
         var items = locations.items;
         for (var i = items.length - 1; i >= 0; i--) {
             var item = items[i];
-            drawDot(ctx, item.x, item.y, 'red', 1);
+            // drawDot(ctx, item.x, item.y, 'red', 1);
             drawText(ctx, item.x, item.y, item.n, 'red');
         }
     }
