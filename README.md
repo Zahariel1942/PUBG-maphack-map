@@ -96,3 +96,7 @@ if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end()
     w_data["players"].emplace_back(json::object({ { "t", actorTeam }, {"hp", hp}, { "x", actorLocation.X },{ "y", actorLocation.Y }, {"r", relativeRotation.Y } })); // <---- and here
 }
 ```
+
+## Special thanks
+
+[uuaing](https://github.com/uuaing) for facing direction and draw arrow functions.
