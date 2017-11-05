@@ -58,7 +58,7 @@ int sendData(std::string& w_data)
 }
 ```
 
-## changelog
+## Changelog
 
 ### 2017-11-4 04:04:44
  * Dead body is a black dot right now.
