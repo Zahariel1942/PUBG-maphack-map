@@ -136,4 +136,5 @@ if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end()
 ## Special thanks
 
 [uuaing](https://github.com/uuaing) for facing direction and draw arrow functions.
+
 [myloft](https://github.com/myloft) for the curActor decryption
