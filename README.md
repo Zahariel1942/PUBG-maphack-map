@@ -1,6 +1,6 @@
 # PUBG-mapper
 
-This map should working with https://github.com/jussihi/PUBG-map-hack
+This map should working with a memory reader like: https://github.com/jussihi/PUBG-map-hack
 
 ![](pics/browser.png)
 
@@ -26,16 +26,16 @@ if you want to use your custom reader, please POST that JSON struct to `http://1
 {
     "locations": {
         "players": [{
-            "t": 0,    // team id
-            "x": 1.00, // actorLocation X
-            "y": 1.00, // actorLocation Y
-            "hp": 1.00,// HP
-            "r": 1.00  // relativeRotation Y
+            "t": 0,
+            "x": 1.00,
+            "y": 1.00,
+            "hp": 1.00,
+            "r": 1.00
         }],
         "items": [{
             "x": 1.00,
             "y": 1.00,
-            "n": "scar" // name
+            "n": "scar"
         }],
         "vehicles": [{
             "x": 1.00,
@@ -44,9 +44,14 @@ if you want to use your custom reader, please POST that JSON struct to `http://1
         }]
     }
 }
+// t team id
+// x actorLocation X
+// y actorLocation Y
+// r relativeRotation Y
+// n name
 ```
 
-## working with **PUBG-map-hack**
+## working with **[PUBG-map-hack](https://github.com/jussihi/PUBG-map-hack)**
 
 edit your PUBG-map-hack `CURLWrapper.hpp` file:
 
