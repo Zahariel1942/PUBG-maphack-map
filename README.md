@@ -18,7 +18,35 @@ This map should working with https://github.com/jussihi/PUBG-map-hack
 3. Run services `node index.js`.
 4. The Map will running at `localhost:7890`.
 
-## Configure **PUBG-map-hack**
+## custom your reader
+
+if you want to use your custom reader, please POST that JSON struct to `http://127.0.0.1:7890'
+
+```json
+{
+    "locations": {
+        "players": [{
+            "t": 0,    // team id
+            "x": 1.00, // actorLocation X
+            "y": 1.00, // actorLocation Y
+            "hp": 1.00,// HP
+            "r": 1.00  // relativeRotation Y
+        }],
+        "items": [{
+            "x": 1.00,
+            "y": 1.00,
+            "n": "scar" // name
+        }],
+        "vehicles": [{
+            "x": 1.00,
+            "y": 1.00,
+            "v": "buggy"
+        }]
+    }
+}
+```
+
+## working with **PUBG-map-hack**
 
 edit your PUBG-map-hack `CURLWrapper.hpp` file:
 
@@ -27,7 +55,8 @@ edit your PUBG-map-hack `CURLWrapper.hpp` file:
 3. Save and compile.
 
 exp:
-```
+
+```C++
 int sendData(std::string& w_data)
 {
     try
@@ -65,7 +94,8 @@ int sendData(std::string& w_data)
  * Add a Health pie chart, The player's health has a visual effect.
 
 **to enable this feature you need edit your PUBG-map-hack `GameDataParser.hpp`**:
-```
+
+```C++
 if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end())
 {
     // ...
@@ -83,7 +113,8 @@ if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end()
 * Add facing direction arrow.
 
 **to enable this feature you need edit your PUBG-map-hack `GameDataParser.hpp`**:
-```
+
+```C++
 if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end())
 {
     int64_t rootCmpPtr = _Reader->readType<int64_t>(curActor + 0x180);
@@ -100,3 +131,4 @@ if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end()
 ## Special thanks
 
 [uuaing](https://github.com/uuaing) for facing direction and draw arrow functions.
+[myloft](https://github.com/myloft) for the curActor decryption
