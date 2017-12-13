@@ -145,6 +145,10 @@ if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end()
 }
 ```
 
+### 2017-12-14 01:09:28
+* rename project.
+* code refactoring, now code is clean and upgradable.
+
 ## Special thanks
 
 [uuaing](https://github.com/uuaing) for facing direction and draw arrow functions.
