@@ -1,4 +1,4 @@
-function Rader(canvas) {
+function Radar(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     trackTransforms(this.ctx);
@@ -84,21 +84,21 @@ function Rader(canvas) {
     }
 }
 
-Rader.prototype.map = function () {
+Radar.prototype.map = function () {
     this.ctx.drawImage(this.mapImage, 0, 0);
 }
 
-Rader.prototype.clear = function () {
+Radar.prototype.clear = function () {
     var p1 = this.ctx.transformedPoint(0, 0);
     var p2 = this.ctx.transformedPoint(this.canvas.width, this.canvas.height);
     this.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
 }
 
-Rader.prototype.translate = function (x, y) {
+Radar.prototype.translate = function (x, y) {
     this.ctx.translate(x, y);
 }
 
-Rader.prototype.setZoom = function (scale) {
+Radar.prototype.setZoom = function (scale) {
     var pt = this.ctx.transformedPoint(this.canvas.width / 2, this.canvas.height / 2);
     this.scaledFactor *= scale;
     this.ctx.translate(pt.x, pt.y);
@@ -106,11 +106,11 @@ Rader.prototype.setZoom = function (scale) {
     this.ctx.translate(-pt.x, -pt.y);
 }
 
-Rader.prototype.setMove = function (offsetX, offsetY) {
+Radar.prototype.setMove = function (offsetX, offsetY) {
     this.translate(offsetX / this.scaledFactor, offsetY / this.scaledFactor);
 }
 
-Rader.prototype.setFocus = function (x, y) {
+Radar.prototype.setFocus = function (x, y) {
     var pos = this.coords2Pos(x, y);
     this.translate(this.focusOffset.X - pos.X, this.focusOffset.Y - pos.Y);
     this.focusOffset.X = pos.X;
@@ -118,18 +118,18 @@ Rader.prototype.setFocus = function (x, y) {
 }
 
 // translates game coords to overlay coords
-Rader.prototype.game2Pix = function (p) {
+Radar.prototype.game2Pix = function (p) {
     return p * (8130 / 813000)
 }
 
-Rader.prototype.coords2Pos = function (x, y) {
+Radar.prototype.coords2Pos = function (x, y) {
     return {
         X: this.game2Pix(x),
         Y: this.game2Pix(y)
     }
 }
 
-Rader.prototype.dot = function (x, y, color, width) {
+Radar.prototype.dot = function (x, y, color, width) {
     var pos = this.coords2Pos(x, y);
     var radius = 7 / this.scaledFactor;
     this.ctx.beginPath();
@@ -139,7 +139,7 @@ Rader.prototype.dot = function (x, y, color, width) {
     this.ctx.fill();
 }
 
-Rader.prototype.pieChart = function (x, y, percent, color) {
+Radar.prototype.pieChart = function (x, y, percent, color) {
     var pos = this.coords2Pos(x, y);
     var radius = 7 / this.scaledFactor;
     var startAngle = 1.5 * Math.PI;
@@ -154,7 +154,7 @@ Rader.prototype.pieChart = function (x, y, percent, color) {
     this.ctx.fill();
 }
 
-Rader.prototype.text = function (x, y, content, color) {
+Radar.prototype.text = function (x, y, content, color) {
     var pos = this.coords2Pos(x, y);
     this.ctx.font = '' + 8 / this.scaledFactor + 'pt Calibri';
     this.ctx.fillStyle = color || 'white';
@@ -163,7 +163,7 @@ Rader.prototype.text = function (x, y, content, color) {
 }
 
 // from https://github.com/jerrytang67/helloworld
-Rader.prototype.lineWithAngle = function (x, y, length, width, angle, color) {
+Radar.prototype.lineWithAngle = function (x, y, length, width, angle, color) {
     var pos = this.coords2Pos(x, y);
     var anX = 5 * Math.cos(Math.PI * angle / 180.0);
     var anY = 5 * Math.sin(Math.PI * angle / 180.0);

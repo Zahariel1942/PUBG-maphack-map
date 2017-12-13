@@ -9,7 +9,7 @@ $(function () {
                 height += 80;
             }
         }
-        $('#rader').attr("width", window.innerWidth).attr("height", height);
+        $('#radar').attr("width", window.innerWidth).attr("height", height);
     }
     window.addEventListener('resize', onResize);
     onResize();
@@ -21,7 +21,7 @@ $(function () {
 })
 
 $(function () {
-    var rader = new Rader($('#rader')[0]);
+    var radar = new Radar($('#radar')[0]);
     var socket = io();
     var locations = {};
     var trackPlayerIndex = parseInt(Utils.getParameterByName('id') || 0);
@@ -41,7 +41,7 @@ $(function () {
         y: 0
     }
     hammertime.on('panmove', function (ev) {
-        rader.setMove(ev.deltaX - lastDelta.x, ev.deltaY - lastDelta.y);
+        radar.setMove(ev.deltaX - lastDelta.x, ev.deltaY - lastDelta.y);
         lastDelta.x = ev.deltaX;
         lastDelta.y = ev.deltaY;
         redraw();
@@ -60,7 +60,7 @@ $(function () {
         if (lastScale > ev.scale) {
             size = -size;
         }
-        rader.setZoom(Math.pow(1.1, size));
+        radar.setZoom(Math.pow(1.1, size));
         lastScale = ev.scale;
         redraw();
     });
@@ -73,7 +73,7 @@ $(function () {
         var evt = e.originalEvent;
         var delta = evt.wheelDelta ? evt.wheelDelta / 40 : evt.detail ? -evt.detail : 0;
         if (delta) {
-            rader.setZoom(Math.pow(1.1, delta));
+            radar.setZoom(Math.pow(1.1, delta));
             redraw();
         }
         return evt.preventDefault() && false;
@@ -85,15 +85,15 @@ $(function () {
     });
 
     function redraw() {
-        rader.clear();
+        radar.clear();
 
         // 视角追踪
         if (locations.players && locations.players[trackPlayerIndex]) {
             var player = locations.players[trackPlayerIndex];
-            rader.setFocus(player.x, player.y);
+            radar.setFocus(player.x, player.y);
         }
         // draw map
-        rader.map();
+        radar.map();
 
         drawPlayers();
         drawItems();
@@ -117,13 +117,13 @@ $(function () {
             }
             if (player.hp == 0) {
                 color = '#000000';
-                rader.dot(player.x, player.y, color);
+                radar.dot(player.x, player.y, color);
             } else {
-                rader.lineWithAngle(player.x, player.y, 15, 6, player.r, color);
-                rader.dot(player.x, player.y, color);
-                rader.pieChart(player.x, player.y, ((100 - player.hp) / 100), 'gray')
+                radar.lineWithAngle(player.x, player.y, 15, 6, player.r, color);
+                radar.dot(player.x, player.y, color);
+                radar.pieChart(player.x, player.y, ((100 - player.hp) / 100), 'gray')
             }
-            rader.text(player.x, player.y, i, 'white');
+            radar.text(player.x, player.y, i, 'white');
         }
     }
 
@@ -134,7 +134,7 @@ $(function () {
         var items = locations.items;
         for (var i = items.length - 1; i >= 0; i--) {
             var item = items[i];
-            rader.text(item.x, item.y, item.n, 'red');
+            radar.text(item.x, item.y, item.n, 'red');
         }
     }
 
@@ -145,7 +145,7 @@ $(function () {
         var vehicles = locations.vehicles;
         for (var i = vehicles.length - 1; i >= 0; i--) {
             var vehicle = vehicles[i];
-            rader.text(vehicle.x, vehicle.y, vehicle.v, 'orange');
+            radar.text(vehicle.x, vehicle.y, vehicle.v, 'orange');
         }
     }
 });

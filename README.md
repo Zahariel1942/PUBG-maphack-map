@@ -1,8 +1,16 @@
-# PUBG-mapper
-
-This map should working with a memory reader like: https://github.com/jussihi/PUBG-map-hack
+# PUBG-Radar
 
 ![](pics/browser.png)
+
+## READ ME FIRST!
+
+This is just a radar!
+
+This can not working alone.
+
+It needs a memory reader like: (PUBG-map-hack)[https://github.com/jussihi/PUBG-map-hack].
+
+So please dont ask why it's not working, get your memory reader first!
 
 ## Feature
 
@@ -18,40 +26,11 @@ This map should working with a memory reader like: https://github.com/jussihi/PU
 3. Run services `node index.js`.
 4. The Map will running at `localhost:7890`.
 
-## custom your reader
+## Configure
 
-if you want to use your custom reader, please POST that JSON struct to `http://127.0.0.1:7890'
+Configure your memory reader to work with PUBG-Radar.
 
-```json
-{
-    "locations": {
-        "players": [{
-            "t": 0,
-            "x": 1.00,
-            "y": 1.00,
-            "hp": 1.00,
-            "r": 1.00
-        }],
-        "items": [{
-            "x": 1.00,
-            "y": 1.00,
-            "n": "scar"
-        }],
-        "vehicles": [{
-            "x": 1.00,
-            "y": 1.00,
-            "v": "buggy"
-        }]
-    }
-}
-// t team id
-// x actorLocation X
-// y actorLocation Y
-// r relativeRotation Y
-// n name
-```
-
-## working with **[PUBG-map-hack](https://github.com/jussihi/PUBG-map-hack)**
+### **[PUBG-map-hack](https://github.com/jussihi/PUBG-map-hack)**
 
 edit your PUBG-map-hack `CURLWrapper.hpp` file:
 
@@ -90,6 +69,39 @@ int sendData(std::string& w_data)
         return -1;
     }
 }
+```
+
+### custom reader
+
+HTTP POST that JSON struct blow, send it to `http://127.0.0.1:7890'.
+
+```json
+{
+    "locations": {
+        "players": [{
+            "t": 0,
+            "x": 1.00,
+            "y": 1.00,
+            "hp": 1.00,
+            "r": 1.00
+        }],
+        "items": [{
+            "x": 1.00,
+            "y": 1.00,
+            "n": "scar"
+        }],
+        "vehicles": [{
+            "x": 1.00,
+            "y": 1.00,
+            "v": "buggy"
+        }]
+    }
+}
+// t team id
+// x actorLocation X
+// y actorLocation Y
+// r relativeRotation Y
+// n name
 ```
 
 ## Changelog
