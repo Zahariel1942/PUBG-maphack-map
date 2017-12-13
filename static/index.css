@@ -11,6 +11,6 @@ body {
     top: 0;
 }
 
-.map {
+.container canvas {
     display: block;
 }
