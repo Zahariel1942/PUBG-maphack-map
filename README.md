@@ -106,25 +106,13 @@ HTTP POST that JSON struct blow, send it to `http://127.0.0.1:7890'.
 
 ## Changelog
 
-### 2017-11-4 04:04:44
- * Dead body is a black dot right now.
- * Add a Health pie chart, The player's health has a visual effect.
+### 2017-12-16 01:37:18
+* facing direction arrow is no longer displayed when player is driving or parachuting.
+* try to add a meter but failed, some junk code here.
 
-**to enable this feature you need edit your PUBG-map-hack `GameDataParser.hpp`**:
-
-```C++
-if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end())
-{
-    // ...
-
-    float hp = _Reader->readType<float>(curActor + 0x107C); // <---- here
-
-    w_data["players"].emplace_back(json::object({ { "t", actorTeam }, {"hp", hp}, { "x", actorLocation.X },{ "y", actorLocation.Y }/*,{ "z", actorLocation.Z }*/ })); // <---- and here
-}
- ```
-
-### 2017-11-5 21:47:58
-* Add fullscreen support (ios safari ONLY).
+### 2017-12-14 01:09:28
+* rename project.
+* code refactoring, now code is clean and upgradable.
 
 ### 2017-11-6 00:16:33
 * Add facing direction arrow.
@@ -145,9 +133,25 @@ if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end()
 }
 ```
 
-### 2017-12-14 01:09:28
-* rename project.
-* code refactoring, now code is clean and upgradable.
+### 2017-11-5 21:47:58
+* Add fullscreen support (ios safari ONLY).
+
+### 2017-11-4 04:04:44
+ * Dead body is a black dot right now.
+ * Add a Health pie chart, The player's health has a visual effect.
+
+**to enable this feature you need edit your PUBG-map-hack `GameDataParser.hpp`**:
+
+```C++
+if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end())
+{
+    // ...
+
+    float hp = _Reader->readType<float>(curActor + 0x107C); // <---- here
+
+    w_data["players"].emplace_back(json::object({ { "t", actorTeam }, {"hp", hp}, { "x", actorLocation.X },{ "y", actorLocation.Y }/*,{ "z", actorLocation.Z }*/ })); // <---- and here
+}
+ ```
 
 ## Special thanks
 
