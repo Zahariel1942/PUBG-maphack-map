@@ -9,6 +9,10 @@ function Radar(canvas) {
         X: this.canvas.width / 2,
         Y: this.canvas.height / 2
     };
+    this.viewPortOffset = {
+        X: 0,
+        Y: 0
+    };
     var self = this;
     window.addEventListener('resize', function () {
         self.focusOffset = {
@@ -94,8 +98,10 @@ Radar.prototype.clear = function () {
     this.ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
 }
 
-Radar.prototype.translate = function (x, y) {
-    this.ctx.translate(x, y);
+Radar.prototype.translate = function (offsetX, offsetY) {
+    this.ctx.translate(offsetX, offsetY);
+    this.viewPortOffset.X += offsetX;
+    this.viewPortOffset.Y += offsetY;
 }
 
 Radar.prototype.setZoom = function (scale) {
@@ -107,14 +113,15 @@ Radar.prototype.setZoom = function (scale) {
 }
 
 Radar.prototype.setMove = function (offsetX, offsetY) {
-    this.translate(offsetX / this.scaledFactor, offsetY / this.scaledFactor);
+    offsetX = offsetX / this.scaledFactor;
+    offsetY = offsetY / this.scaledFactor;
+    this.translate(offsetX, offsetY);
 }
 
 Radar.prototype.setFocus = function (x, y) {
     var pos = this.coords2Pos(x, y);
     this.translate(this.focusOffset.X - pos.X, this.focusOffset.Y - pos.Y);
-    this.focusOffset.X = pos.X;
-    this.focusOffset.Y = pos.Y;
+    this.focusOffset = pos;
 }
 
 // translates game coords to overlay coords
@@ -161,6 +168,14 @@ Radar.prototype.text = function (x, y, content, color) {
     this.ctx.textAlign = 'center';
     this.ctx.fillText(content, pos.X, pos.Y + (3 / this.scaledFactor));
 }
+
+// useless
+// Radar.prototype.floatText = function (posX, posY, content, color) {
+//     this.ctx.font = '' + 8 / this.scaledFactor + 'pt Calibri';
+//     this.ctx.fillStyle = color || 'lightgreen';
+//     this.ctx.textAlign = 'left';
+//     this.ctx.fillText(content, posX - this.viewPortOffset.X, posY - this.viewPortOffset.Y);
+// }
 
 // from https://github.com/jerrytang67/helloworld
 Radar.prototype.lineWithAngle = function (x, y, length, width, angle, color) {

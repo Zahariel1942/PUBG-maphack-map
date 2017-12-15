@@ -23,6 +23,12 @@ $(function () {
 $(function () {
     var radar = new Radar($('#radar')[0]);
     var socket = io();
+    var socketUpdateCounter = new Utils.MinsCounter();
+    socket.on('update', function (snapshot) {
+        locations = snapshot;
+        socketUpdateCounter.update();
+        redraw();
+    });
     var locations = {};
     var trackPlayerIndex = parseInt(Utils.getParameterByName('id') || 0);
 
@@ -79,11 +85,6 @@ $(function () {
         return evt.preventDefault() && false;
     });
 
-    socket.on('update', function (snapshot) {
-        locations = snapshot;
-        redraw();
-    });
-
     function redraw() {
         radar.clear();
 
@@ -98,6 +99,7 @@ $(function () {
         drawPlayers();
         drawItems();
         drawVehicles();
+        drawMisc();
     }
 
     function drawPlayers() {
@@ -119,7 +121,9 @@ $(function () {
                 color = '#000000';
                 radar.dot(player.x, player.y, color);
             } else {
-                radar.lineWithAngle(player.x, player.y, 15, 6, player.r, color);
+                if(player.r != 0){
+                    radar.lineWithAngle(player.x, player.y, 15, 6, player.r, color);
+                }
                 radar.dot(player.x, player.y, color);
                 radar.pieChart(player.x, player.y, ((100 - player.hp) / 100), 'gray')
             }
@@ -145,7 +149,15 @@ $(function () {
         var vehicles = locations.vehicles;
         for (var i = vehicles.length - 1; i >= 0; i--) {
             var vehicle = vehicles[i];
-            radar.text(vehicle.x, vehicle.y, vehicle.v, 'orange');
+            var name = "";
+            if (vehicle.v.indexOf('_') >= 0) {
+                name = vehicle.v.split('_')[0];
+            }
+            radar.text(vehicle.x, vehicle.y, name, 'orange');
         }
+    }
+
+    function drawMisc() {
+        // radar.floatText(0, 10, "Update: " + socketUpdateCounter.getPerSec() + "ps");
     }
 });
