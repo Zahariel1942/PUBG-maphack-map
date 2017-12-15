@@ -8,7 +8,7 @@ This is just a radar!
 
 This can not working alone.
 
-It needs a memory reader like: (PUBG-map-hack)[https://github.com/jussihi/PUBG-map-hack].
+It needs a memory reader like: [jussihi/PUBG-map-hack](https://github.com/jussihi/PUBG-map-hack).
 
 So please dont ask why it's not working, get your memory reader first!
 
@@ -144,6 +144,10 @@ if (std::find(playerIDs.begin(), playerIDs.end(), curActorID) != playerIDs.end()
     w_data["players"].emplace_back(json::object({ { "t", actorTeam }, {"hp", hp}, { "x", actorLocation.X },{ "y", actorLocation.Y }, {"r", relativeRotation.Y } })); // <---- and here
 }
 ```
+
+### 2017-12-14 01:09:28
+* rename project.
+* code refactoring, now code is clean and upgradable.
 
 ## Special thanks
 
