@@ -32,6 +32,17 @@ $(function () {
     var locations = {};
     var trackPlayerIndex = parseInt(Utils.getParameterByName('id') || 0);
 
+    var maps = ['mapErangel.jpg', 'mapMiramar.jpg'];
+    var mapParameter = Utils.getParameterByName('map');
+    if (mapParameter === '1') {
+        radar.setMap(maps[0]);
+    } else if (mapParameter === '2') {
+        radar.setMap(maps[1]);
+    } else {
+        radar.setMap(maps[Math.random() < .5 ? 1 : 0]);
+    }
+
+
     // 手势支持
     var hammertime = new Hammer.Manager($('.container')[0]);
     hammertime.add(new Hammer.Pan({

@@ -4,7 +4,6 @@ function Radar(canvas) {
     trackTransforms(this.ctx);
     this.scaledFactor = 1;
     this.mapImage = new Image;
-    this.mapImage.src = "map.jpg"
     this.focusOffset = {
         X: this.canvas.width / 2,
         Y: this.canvas.height / 2
@@ -86,6 +85,10 @@ function Radar(canvas) {
             return pt.matrixTransform(xform.inverse());
         }
     }
+}
+
+Radar.prototype.setMap = function (map) {
+    this.mapImage.src = map;
 }
 
 Radar.prototype.map = function () {

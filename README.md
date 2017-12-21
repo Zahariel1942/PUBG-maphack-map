@@ -18,6 +18,7 @@ So please dont ask why it's not working, get your memory reader first!
 * Display item
 * Display Vehicle
 * Track current player location (change that with `/?id=PLAYERINDEX`)
+* Select map (change with `/?map=(1|2)` or pick one at random if omitted)
 
 ## Build instructions
 
