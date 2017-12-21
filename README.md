@@ -107,6 +107,9 @@ HTTP POST that JSON struct blow, send it to `http://127.0.0.1:7890'.
 
 ## Changelog
 
+### 2017-12-21 16:10:08
+* Add desert map supported, made by [@ivq](https://github.com/ivq)
+
 ### 2017-12-16 01:37:18
 * facing direction arrow is no longer displayed when player is driving or parachuting.
 * try to add a meter but failed, some junk code here.
